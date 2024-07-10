@@ -9,7 +9,7 @@ import com.devteria.identityservice.dto.response.FresherResponse;
 import com.devteria.identityservice.entity.Fresher;
 
 @Repository
-public interface FresherRepository extends JpaRepository<Fresher, String>{
+public interface FresherRepository extends JpaRepository<Fresher, Long>{
 
    
 

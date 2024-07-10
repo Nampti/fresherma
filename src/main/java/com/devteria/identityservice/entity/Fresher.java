@@ -10,33 +10,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Fresher {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Column(unique = true)
     private String fresherCode;
-    private String name;
-    private String programmingLanguage;
-    private String email;
 
-    @ElementCollection
-    private List<Double> projectScores;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private User user;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="score_id")
+    private Score score;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "center_id")
     private Center center;
 
-    private Double finalAverageScore;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
-    public void calculateAndUpdateFinalAverageScore() {
-        if (projectScores == null || projectScores.isEmpty()) {
-            throw new IllegalStateException("Project scores are not available.");
-        }
-        double sum = 0;
-        for (Double score : projectScores) {
-            sum += score;
-        }
-        this.finalAverageScore = sum / projectScores.size();
-    }
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    
+    
 }

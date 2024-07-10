@@ -35,7 +35,7 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    public UserResponse updateUser(String userId, UserUpdateRequest request) {
+    public UserResponse updateUser(Long userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -44,7 +44,7 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    public void deleteUser(String userId){
+    public void deleteUser(Long userId){
         userRepository.deleteById(userId);
     }
 
@@ -53,8 +53,9 @@ public class UserService {
                 .map(userMapper::toUserResponse).toList();
     }
 
-    public UserResponse getUser(String id){
+    public UserResponse getUser(Long id){
         return userMapper.toUserResponse(userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found")));
     }
+
 }

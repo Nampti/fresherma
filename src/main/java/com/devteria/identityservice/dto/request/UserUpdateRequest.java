@@ -1,5 +1,7 @@
 package com.devteria.identityservice.dto.request;
 
+import com.devteria.identityservice.entity.Role;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,7 +14,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
     String password;
-    String firstName;
-    String lastName;
+    Role role;
    
 }

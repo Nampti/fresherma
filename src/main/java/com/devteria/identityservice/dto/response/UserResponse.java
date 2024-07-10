@@ -1,5 +1,7 @@
 package com.devteria.identityservice.dto.response;
 
+import com.devteria.identityservice.entity.Role;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,5 +16,6 @@ public class UserResponse {
     String username;
     String password;
     String email;
+    Role role;
   
 }
