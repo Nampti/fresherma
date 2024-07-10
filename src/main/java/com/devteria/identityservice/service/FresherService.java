@@ -38,20 +38,23 @@ public class FresherService {
     }
 
     public FresherResponse createFresher(FresherCreationRequest request) {
+        // Map request to Fresher entity
         Fresher fresher = fresherMapper.toFresher(request);
-        fresher = fresherRepository.save(fresher);
-    
+        
         // Create and save User entity
         User user = new User();
-        user.setName(request.getName()); 
-        user.setUsername(request.getUsername()); 
+        user.setName(request.getName());
+        user.setUsername(request.getUsername());
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
         user.setRole(Role.FRESHER);
-    
-        userRepository.save(user);
-    
+        user = userRepository.save(user); // Save and get the persisted User with ID
+        
+        // Set the User to the Fresher and save Fresher entity
+        fresher.setUser(user); // Assuming Fresher entity has a setUser method to set the User
+        fresher = fresherRepository.save(fresher); // Save the Fresher entity with User reference
+        
         return fresherMapper.toFresherResponse(fresher);
     }
 
