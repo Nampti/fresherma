@@ -1,60 +1,59 @@
-// package com.devteria.identityservice.service;
+package com.devteria.identityservice.service;
 
-// import com.devteria.identityservice.dto.request.FresherCreationRequest;
-// import com.devteria.identityservice.dto.response.FresherResponse;
-// import com.devteria.identityservice.dto.request.FresherScoreUpdateRequest;
-// import com.devteria.identityservice.entity.Fresher;
-// import com.devteria.identityservice.exception.AppException;
-// import com.devteria.identityservice.exception.ErrorCode;
-// import com.devteria.identityservice.mapper.FresherMapper;
-// import com.devteria.identityservice.repository.FresherRepository;
-// import com.devteria.identityservice.repository.UserRepository;
-// import lombok.RequiredArgsConstructor;
-// import org.springframework.stereotype.Service;
+import com.devteria.identityservice.dto.request.FresherCreationRequest;
+import com.devteria.identityservice.dto.response.FresherResponse;
+import com.devteria.identityservice.dto.request.FresherScoreUpdateRequest;
+import com.devteria.identityservice.entity.Fresher;
+import com.devteria.identityservice.entity.Role;
+import com.devteria.identityservice.entity.User;
+import com.devteria.identityservice.exception.AppException;
+import com.devteria.identityservice.exception.ErrorCode;
+import com.devteria.identityservice.mapper.FresherMapper;
+import com.devteria.identityservice.repository.FresherRepository;
+import com.devteria.identityservice.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.AccessLevel;
 
-// import java.util.ArrayList;
-// import java.util.List;
-// import java.util.stream.Collectors;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-// @Service
-// @RequiredArgsConstructor
-// public class FresherService {
-//     private final FresherRepository fresherRepository;
-//     private final UserRepository userRepository;
-//     private final FresherMapper fresherMapper;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-//     public List<FresherResponse> getAllFreshers() {
-//         return fresherRepository.findAll().stream()
-//                 .map(fresherMapper::toFresherResponse)
-//                 .collect(Collectors.toList());
-//     }
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class FresherService {
+    FresherRepository fresherRepository;
+    UserRepository userRepository;
+    FresherMapper fresherMapper;
 
-//     public FresherResponse createFresher(FresherCreationRequest request) {
-      
-//             Fresher fresher = fresherMapper.toFresher(request);
-//             return fresherMapper.toFresherResponse(fresherRepository.save(fresher));
-//     }
+    public List<FresherResponse> getAllFreshers() {
+        return fresherRepository.findAll().stream()
+                .map(fresherMapper::toFresherResponse)
+                .collect(Collectors.toList());
+    }
 
-//    public FresherResponse updateFresherScore(String fresherId, FresherScoreUpdateRequest request) {
-//     Fresher fresher = fresherRepository.findById(fresherId)
-//             .orElseThrow(() -> new AppException(ErrorCode.FRESHER_NOT_FOUND));
+    public FresherResponse createFresher(FresherCreationRequest request) {
+        Fresher fresher = fresherMapper.toFresher(request);
+        fresher = fresherRepository.save(fresher);
     
-   
-//     if (fresher.getProjectScores() == null) {
-//         fresher.setProjectScores(new ArrayList<>());
-//     }
+        // Create and save User entity
+        User user = new User();
+        user.setName(request.getName()); 
+        user.setUsername(request.getUsername()); 
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setEmail(request.getEmail());
+        user.setRole(Role.FRESHER);
     
-   
-//     fresher.getProjectScores().add(request.getScore());
-//     fresher.calculateAndUpdateFinalAverageScore();
-//     return fresherMapper.toFresherResponse(fresherRepository.save(fresher));
-// }
+        userRepository.save(user);
+    
+        return fresherMapper.toFresherResponse(fresher);
+    }
 
-//     public void deleteFresher(String fresherId) {
-//         if (!fresherRepository.existsById(fresherId)) {
-//             throw new AppException(ErrorCode.FRESHER_NOT_FOUND);
-//         }
-//         fresherRepository.deleteById(fresherId);
-//     }
 
-// }
+}

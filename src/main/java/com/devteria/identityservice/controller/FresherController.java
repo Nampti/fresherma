@@ -34,18 +34,4 @@ public class FresherController {
                 .build();
     }
 
-    @PutMapping("/{fresherId}/score")
-    ApiResponse<FresherResponse> updateFresherScore(@PathVariable String fresherId, @RequestBody FresherScoreUpdateRequest request) {
-        return ApiResponse.<FresherResponse>builder()
-                .result(fresherService.updateFresherScore(fresherId, request))
-                .build();
-    }
-
-    @DeleteMapping("/{fresherId}")
-    ApiResponse<String> deleteFresher(@PathVariable String fresherId) {
-        fresherService.deleteFresher(fresherId);
-        return ApiResponse.<String>builder()
-                .result("Fresher has been deleted")
-                .build();
-    }
 }
