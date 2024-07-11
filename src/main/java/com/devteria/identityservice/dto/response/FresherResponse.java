@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 public class FresherResponse {
     Long id;
     String name;
-    
+    String fresherCode;
     
     
 }

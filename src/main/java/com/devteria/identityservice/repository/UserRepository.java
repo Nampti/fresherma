@@ -14,6 +14,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
     Optional<User> findByUsername(String username);
-    @Query("SELECT new com.devteria.identityservice.dto.response.FresherResponse(u.id, u.name) FROM User u JOIN Fresher f ON u.id = f.user.id WHERE u.role = :role")
+    @Query("SELECT new com.devteria.identityservice.dto.response.FresherResponse(u.id, u.name, f.fresherCode) FROM User u JOIN Fresher f ON u.id = f.user.id WHERE u.role = :role")
     List<FresherResponse> findAllByRole(Role role);
 }
