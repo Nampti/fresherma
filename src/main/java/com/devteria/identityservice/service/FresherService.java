@@ -32,16 +32,14 @@ public class FresherService {
     FresherMapper fresherMapper;
 
     public List<FresherResponse> getAllFreshers() {
-        return fresherRepository.findAll().stream()
-                .map(fresherMapper::toFresherResponse)
-                .collect(Collectors.toList());
+          return userRepository.findAllByRole(Role.FRESHER);
     }
 
     public FresherResponse createFresher(FresherCreationRequest request) {
-        // Map request to Fresher entity
+        
         Fresher fresher = fresherMapper.toFresher(request);
         
-        // Create and save User entity
+
         User user = new User();
         user.setName(request.getName());
         user.setUsername(request.getUsername());
@@ -49,11 +47,10 @@ public class FresherService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
         user.setRole(Role.FRESHER);
-        user = userRepository.save(user); // Save and get the persisted User with ID
-        
-        // Set the User to the Fresher and save Fresher entity
-        fresher.setUser(user); // Assuming Fresher entity has a setUser method to set the User
-        fresher = fresherRepository.save(fresher); // Save the Fresher entity with User reference
+        user = userRepository.save(user); 
+       
+        fresher.setUser(user); 
+        fresher = fresherRepository.save(fresher); 
         
         return fresherMapper.toFresherResponse(fresher);
     }

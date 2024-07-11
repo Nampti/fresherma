@@ -9,10 +9,9 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FresherResponse {
-    String id;
+    Long id;
     String name;
-    String email;
-    String programingLanguage;
-    float finalAverageScore;
+    
+    
     
 }

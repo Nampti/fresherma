@@ -26,7 +26,6 @@ public class FresherController {
                 .result(fresherService.createFresher(request))
                 .build();
     }
-
     @GetMapping
     ApiResponse<List<FresherResponse>> getAllFreshers() {
         return ApiResponse.<List<FresherResponse>>builder()
